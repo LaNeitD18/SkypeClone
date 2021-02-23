@@ -20,13 +20,13 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  FirebaseRepository _repository = FirebaseRepository();
+
   @override
   Widget build(BuildContext context) {
     // FirebaseFirestore.instance.collection('users').doc().set({
     //   'name': 'pht',
     // });
-
-    FirebaseRepository _repository = FirebaseRepository();
 
     return MaterialApp(
       title: 'Skype Clone',

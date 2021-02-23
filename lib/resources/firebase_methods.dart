@@ -57,12 +57,12 @@ class FirebaseMethods {
       profilePhoto: currentUser.photoURL,
       username: username,
     );
-
     firestore.collection("users").doc(currentUser.uid).set(user.toMap(user));
   }
 
   Future<void> signOut() async {
-    await FirebaseAuth.instance.signOut();
-    getCurrentUser();
+    await _googleSignIn.disconnect();
+    await _googleSignIn.signOut();
+    return await _auth.signOut();
   }
 }
