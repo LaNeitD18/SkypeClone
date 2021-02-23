@@ -1,3 +1,4 @@
+import 'package:SkypeClone/screens/pageviews/chat_list_screen.dart';
 import 'package:SkypeClone/utils/universal_variables.dart';
 import 'package:flutter/material.dart';
 import 'package:SkypeClone/resources/firebase_repository.dart';
@@ -36,7 +37,9 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: UniversalVariables.blackColor,
       body: PageView(
         children: <Widget>[
-          Center(child: Text("Chat List Screen")),
+          Container(
+            child: ChatListScreen(),
+          ),
           Center(child: Text("Call Logs")),
           Center(child: Text("Contact Screen")),
         ],
