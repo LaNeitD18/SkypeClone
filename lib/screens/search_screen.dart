@@ -1,5 +1,6 @@
 import 'package:SkypeClone/models/user.dart';
 import 'package:SkypeClone/resources/firebase_repository.dart';
+import 'package:SkypeClone/screens/chatscreens/chat_screen.dart';
 import 'package:SkypeClone/utils/universal_variables.dart';
 import 'package:SkypeClone/widgets/custom_tile.dart';
 import 'package:flutter/material.dart';
@@ -119,7 +120,13 @@ class _SearchScreenState extends State<SearchScreen> {
         );
         return CustomTile(
             mini: false,
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          ChatScreen(receiver: searchedUser)));
+            },
             leading: CircleAvatar(
               backgroundImage: NetworkImage(searchedUser.profilePhoto),
               backgroundColor: Colors.grey,

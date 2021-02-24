@@ -36,6 +36,9 @@ class _MyAppState extends State<MyApp> {
       routes: {
         '/search_screen': (context) => SearchScreen(),
       },
+      theme: ThemeData(
+        brightness: Brightness.dark,
+      ),
       home: FutureBuilder(
         future: _repository.getCurrentUser(),
         builder: (context, AsyncSnapshot<User> snapshot) {
