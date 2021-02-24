@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:SkypeClone/constants/strings.dart';
 import 'package:SkypeClone/models/message.dart';
 import 'package:SkypeClone/utils/utilities.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -5,11 +8,14 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:SkypeClone/models/user.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class FirebaseMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   GoogleSignIn _googleSignIn = GoogleSignIn();
   static final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  Reference _reference;
 
   // class user
   UserModel user = UserModel();
@@ -39,7 +45,7 @@ class FirebaseMethods {
   // check if user is new or not
   Future<bool> authenticateUser(User user) async {
     QuerySnapshot result = await firestore
-        .collection("users")
+        .collection(USERS_COLLECTION)
         .where("email", isEqualTo: user.email)
         .get();
 
@@ -58,7 +64,10 @@ class FirebaseMethods {
       profilePhoto: currentUser.photoURL,
       username: username,
     );
-    firestore.collection("users").doc(currentUser.uid).set(user.toMap(user));
+    firestore
+        .collection(USERS_COLLECTION)
+        .doc(currentUser.uid)
+        .set(user.toMap(user));
   }
 
   Future<void> signOut() async {
@@ -70,7 +79,8 @@ class FirebaseMethods {
   Future<List<UserModel>> fetchAllUsers(User currentUser) async {
     List<UserModel> userList = List<UserModel>();
 
-    QuerySnapshot querySnapshot = await firestore.collection("users").get();
+    QuerySnapshot querySnapshot =
+        await firestore.collection(USERS_COLLECTION).get();
 
     for (var user in querySnapshot.docs) {
       if (user.id != currentUser.uid) {
@@ -85,15 +95,21 @@ class FirebaseMethods {
     var map = message.toMap();
 
     await firestore
-        .collection("messages")
+        .collection(MESSAGES_COLLECTION)
         .doc(message.senderId)
         .collection(message.receiverId)
         .add(map);
 
     return await firestore
-        .collection("messages")
+        .collection(MESSAGES_COLLECTION)
         .doc(message.receiverId)
         .collection(message.senderId)
         .add(map);
   }
+
+  Future<String> uploadImageToStorage(File image) async {
+    _reference = FirebaseStorage.instance.ref();
+  }
+
+  void uploadImage(File image, String receiverId, String senderId) async {}
 }
