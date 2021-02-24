@@ -1,3 +1,4 @@
+import 'package:SkypeClone/models/message.dart';
 import 'package:SkypeClone/utils/utilities.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -77,5 +78,22 @@ class FirebaseMethods {
       }
     }
     return userList;
+  }
+
+  Future<void> addMessageToDb(
+      Message message, UserModel sender, UserModel receiver) async {
+    var map = message.toMap();
+
+    await firestore
+        .collection("messages")
+        .doc(message.senderId)
+        .collection(message.receiverId)
+        .add(map);
+
+    return await firestore
+        .collection("messages")
+        .doc(message.receiverId)
+        .collection(message.senderId)
+        .add(map);
   }
 }
