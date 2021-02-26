@@ -1,4 +1,5 @@
 import 'package:SkypeClone/provider/image_upload_provider.dart';
+import 'package:SkypeClone/provider/user_provider.dart';
 import 'package:SkypeClone/resources/firebase_repository.dart';
 import 'package:SkypeClone/screens/home_screen.dart';
 import 'package:SkypeClone/screens/login_screen.dart';
@@ -31,8 +32,15 @@ class _MyAppState extends State<MyApp> {
     //   'name': 'pht',
     // });
 
-    return ChangeNotifierProvider<ImageUploadProvider>(
-      create: (context) => ImageUploadProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => ImageUploadProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => UserProvider(),
+        )
+      ],
       child: MaterialApp(
         title: 'Skype Clone',
         debugShowCheckedModeBanner: false,

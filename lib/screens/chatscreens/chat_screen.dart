@@ -7,6 +7,7 @@ import 'package:SkypeClone/models/user.dart';
 import 'package:SkypeClone/provider/image_upload_provider.dart';
 import 'package:SkypeClone/resources/firebase_repository.dart';
 import 'package:SkypeClone/screens/chatscreens/widgets/cached_image.dart';
+import 'package:SkypeClone/utils/call_utilities.dart';
 import 'package:SkypeClone/utils/universal_variables.dart';
 import 'package:SkypeClone/utils/utilities.dart';
 import 'package:SkypeClone/widgets/appbar.dart';
@@ -202,7 +203,12 @@ class _ChatScreenState extends State<ChatScreen> {
             style: TextStyle(color: Colors.white, fontSize: 16),
           )
         : message.photoUrl != null
-            ? CachedImage(url: message.photoUrl)
+            ? CachedImage(
+                message.photoUrl,
+                height: 250,
+                width: 250,
+                radius: 10,
+              )
             : Text("Url is null");
   }
 
@@ -430,7 +436,10 @@ class _ChatScreenState extends State<ChatScreen> {
           widget.receiver.name,
         ),
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.video_call), onPressed: () {}),
+          IconButton(
+              icon: Icon(Icons.video_call),
+              onPressed: () => CallUtils.dial(
+                  from: sender, to: widget.receiver, context: context)),
           IconButton(icon: Icon(Icons.phone), onPressed: () {})
         ],
         leading: IconButton(

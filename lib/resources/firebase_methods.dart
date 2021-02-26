@@ -15,6 +15,8 @@ class FirebaseMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   GoogleSignIn _googleSignIn = GoogleSignIn();
   static final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  static final CollectionReference _userCollection =
+      firestore.collection(USERS_COLLECTION);
 
   Reference _reference;
 
@@ -25,6 +27,15 @@ class FirebaseMethods {
     User currentUser;
     currentUser = _auth.currentUser;
     return currentUser;
+  }
+
+  Future<UserModel> getUserDetails() async {
+    User currentUser = await getCurrentUser();
+
+    DocumentSnapshot documentSnapshot =
+        await _userCollection.doc(currentUser.uid).get();
+
+    return UserModel.fromMap(documentSnapshot.data());
   }
 
   Future<User> signIn() async {
@@ -123,6 +134,7 @@ class FirebaseMethods {
       return url;
     } catch (e) {
       print(e);
+      return "";
     }
   }
 
