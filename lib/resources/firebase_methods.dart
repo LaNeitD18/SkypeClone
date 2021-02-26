@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:SkypeClone/constants/strings.dart';
 import 'package:SkypeClone/models/message.dart';
+import 'package:SkypeClone/provider/image_upload_provider.dart';
 import 'package:SkypeClone/utils/utilities.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -108,8 +109,55 @@ class FirebaseMethods {
   }
 
   Future<String> uploadImageToStorage(File image) async {
-    _reference = FirebaseStorage.instance.ref();
+    try {
+      _reference = FirebaseStorage.instance
+          .ref()
+          .child('${DateTime.now().millisecondsSinceEpoch}');
+
+      UploadTask _storageUploadTask = _reference.putFile(image);
+
+      var url = await (await _storageUploadTask.whenComplete(() => null))
+          .ref
+          .getDownloadURL();
+
+      return url;
+    } catch (e) {
+      print(e);
+    }
   }
 
-  void uploadImage(File image, String receiverId, String senderId) async {}
+  void setImageMessage(String url, String receiverId, String senderId) async {
+    Message message;
+
+    message = Message.imageMessage(
+        message: "IMAGE",
+        receiverId: receiverId,
+        senderId: senderId,
+        photoUrl: url,
+        timestamp: Timestamp.now(),
+        type: 'image');
+
+    var map = message.toMapForImage();
+
+    // set data to db
+    await firestore
+        .collection(MESSAGES_COLLECTION)
+        .doc(message.senderId)
+        .collection(message.receiverId)
+        .add(map);
+
+    await firestore
+        .collection(MESSAGES_COLLECTION)
+        .doc(message.receiverId)
+        .collection(message.senderId)
+        .add(map);
+  }
+
+  void uploadImage(File image, String receiverId, String senderId,
+      ImageUploadProvider imageUploadProvider) async {
+    imageUploadProvider.setToLoading();
+    String url = await uploadImageToStorage(image);
+    imageUploadProvider.setToIdle();
+    setImageMessage(url, receiverId, senderId);
+  }
 }

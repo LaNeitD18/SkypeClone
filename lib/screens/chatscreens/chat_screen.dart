@@ -1,9 +1,12 @@
 import 'dart:io';
 
 import 'package:SkypeClone/constants/strings.dart';
+import 'package:SkypeClone/enum/view_state.dart';
 import 'package:SkypeClone/models/message.dart';
 import 'package:SkypeClone/models/user.dart';
+import 'package:SkypeClone/provider/image_upload_provider.dart';
 import 'package:SkypeClone/resources/firebase_repository.dart';
+import 'package:SkypeClone/screens/chatscreens/widgets/cached_image.dart';
 import 'package:SkypeClone/utils/universal_variables.dart';
 import 'package:SkypeClone/utils/utilities.dart';
 import 'package:SkypeClone/widgets/appbar.dart';
@@ -13,6 +16,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:emoji_picker/emoji_picker.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class ChatScreen extends StatefulWidget {
   final UserModel receiver;
@@ -30,6 +34,8 @@ class _ChatScreenState extends State<ChatScreen> {
   ScrollController _listScrollController = ScrollController();
 
   FocusNode textFieldFocus = FocusNode();
+
+  ImageUploadProvider _imageUploadProvider;
 
   UserModel sender;
   String _currentUserId;
@@ -72,12 +78,20 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _imageUploadProvider = Provider.of<ImageUploadProvider>(context);
+
     return Scaffold(
       backgroundColor: UniversalVariables.blackColor,
       appBar: customAppBar(context),
       body: Column(
         children: <Widget>[
           Flexible(child: messageList()),
+          _imageUploadProvider.getViewState == ViewState.LOADING
+              ? Container(
+                  margin: EdgeInsets.only(right: 15),
+                  alignment: Alignment.centerRight,
+                  child: CircularProgressIndicator())
+              : Container(),
           chatControls(),
           showEmojiPicker
               ? Container(
@@ -182,10 +196,14 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   getMessage(Message message) {
-    return Text(
-      message != null ? message.message : "",
-      style: TextStyle(color: Colors.white, fontSize: 16),
-    );
+    return message.type != MESSAGE_TYPE_IMAGE
+        ? Text(
+            message != null ? message.message : "",
+            style: TextStyle(color: Colors.white, fontSize: 16),
+          )
+        : message.photoUrl != null
+            ? CachedImage(url: message.photoUrl)
+            : Text("Url is null");
   }
 
   Widget receiverLayout(Message message) {
@@ -259,9 +277,11 @@ class _ChatScreenState extends State<ChatScreen> {
                     child: ListView(
                   children: [
                     ModalTile(
-                        title: "Media",
-                        subtitle: "Share Photos and Video",
-                        icon: Icons.image),
+                      title: "Media",
+                      subtitle: "Share Photos and Video",
+                      icon: Icons.image,
+                      onTap: () => pickImage(source: ImageSource.gallery),
+                    ),
                     ModalTile(
                         title: "File",
                         subtitle: "Share files",
@@ -287,15 +307,6 @@ class _ChatScreenState extends State<ChatScreen> {
               ],
             );
           });
-    }
-
-    pickImage({@required ImageSource source}) async {
-      File selectedImage = await Utils.pickImage(source: source);
-      _repository.uploadImage(
-        image: selectedImage,
-        receiverId: widget.receiver.uid,
-        senderId: _currentUserId,
-      );
     }
 
     return Container(
@@ -383,6 +394,16 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  pickImage({@required ImageSource source}) async {
+    File selectedImage = await Utils.pickImage(source: source);
+    _repository.uploadImage(
+      image: selectedImage,
+      receiverId: widget.receiver.uid,
+      senderId: _currentUserId,
+      imageUploadProvider: _imageUploadProvider,
+    );
+  }
+
   sendMessage() {
     var text = textFieldController.text;
 
@@ -426,12 +447,14 @@ class ModalTile extends StatelessWidget {
   final String title;
   final String subtitle;
   final IconData icon;
+  final Function onTap;
 
   const ModalTile(
       {Key key,
       @required this.title,
       @required this.subtitle,
-      @required this.icon})
+      @required this.icon,
+      this.onTap})
       : super(key: key);
 
   @override
@@ -440,6 +463,7 @@ class ModalTile extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 15),
       child: CustomTile(
           mini: false,
+          onTap: onTap,
           leading: Container(
             margin: EdgeInsets.only(right: 10),
             decoration: BoxDecoration(

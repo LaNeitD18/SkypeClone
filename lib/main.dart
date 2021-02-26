@@ -1,3 +1,4 @@
+import 'package:SkypeClone/provider/image_upload_provider.dart';
 import 'package:SkypeClone/resources/firebase_repository.dart';
 import 'package:SkypeClone/screens/home_screen.dart';
 import 'package:SkypeClone/screens/login_screen.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,27 +31,30 @@ class _MyAppState extends State<MyApp> {
     //   'name': 'pht',
     // });
 
-    return MaterialApp(
-      title: 'Skype Clone',
-      debugShowCheckedModeBanner: false,
-      initialRoute: '/',
-      routes: {
-        '/search_screen': (context) => SearchScreen(),
-      },
-      theme: ThemeData(
-        brightness: Brightness.dark,
-      ),
-      home: FutureBuilder(
-        future: _repository.getCurrentUser(),
-        builder: (context, AsyncSnapshot<User> snapshot) {
-          if (snapshot.hasData) {
-            print("home");
-            return HomeScreen();
-          } else {
-            print("login");
-            return LoginScreen();
-          }
+    return ChangeNotifierProvider<ImageUploadProvider>(
+      create: (context) => ImageUploadProvider(),
+      child: MaterialApp(
+        title: 'Skype Clone',
+        debugShowCheckedModeBanner: false,
+        initialRoute: '/',
+        routes: {
+          '/search_screen': (context) => SearchScreen(),
         },
+        theme: ThemeData(
+          brightness: Brightness.dark,
+        ),
+        home: FutureBuilder(
+          future: _repository.getCurrentUser(),
+          builder: (context, AsyncSnapshot<User> snapshot) {
+            if (snapshot.hasData) {
+              print("home");
+              return HomeScreen();
+            } else {
+              print("login");
+              return LoginScreen();
+            }
+          },
+        ),
       ),
     );
   }

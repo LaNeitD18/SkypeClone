@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:SkypeClone/models/message.dart';
 import 'package:SkypeClone/models/user.dart';
+import 'package:SkypeClone/provider/image_upload_provider.dart';
 import 'package:SkypeClone/resources/firebase_methods.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -35,6 +36,8 @@ class FirebaseRepository {
     @required File image,
     @required String receiverId,
     @required String senderId,
+    @required ImageUploadProvider imageUploadProvider,
   }) =>
-      _firebaseMethods.uploadImage(image, receiverId, senderId);
+      _firebaseMethods.uploadImage(
+          image, receiverId, senderId, imageUploadProvider);
 }

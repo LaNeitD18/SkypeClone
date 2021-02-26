@@ -43,6 +43,8 @@ dev_dependencies:
   image_picker: ^0.6.7+22
   path_provider: ^1.6.27
   firebase_storage: ^7.0.0
+  provider: ^4.3.3
+  cached_network_image: ^2.5.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
