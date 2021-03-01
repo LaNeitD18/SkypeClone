@@ -1,5 +1,5 @@
 import 'package:SkypeClone/models/user.dart';
-import 'package:SkypeClone/resources/firebase_repository.dart';
+import 'package:SkypeClone/resources/auth_methods.dart';
 import 'package:SkypeClone/screens/chatscreens/chat_screen.dart';
 import 'package:SkypeClone/utils/universal_variables.dart';
 import 'package:SkypeClone/widgets/custom_tile.dart';
@@ -15,7 +15,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  FirebaseRepository _repository = FirebaseRepository();
+  final AuthMethods _authMethods = AuthMethods();
 
   List<UserModel> userList;
   String query = "";
@@ -25,8 +25,8 @@ class _SearchScreenState extends State<SearchScreen> {
   void initState() {
     super.initState();
 
-    _repository.getCurrentUser().then((User user) {
-      _repository.fetchAllUsers(user).then((List<UserModel> list) {
+    _authMethods.getCurrentUser().then((User user) {
+      _authMethods.fetchAllUsers(user).then((List<UserModel> list) {
         setState(() {
           userList = list;
         });

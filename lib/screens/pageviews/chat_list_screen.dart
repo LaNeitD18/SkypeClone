@@ -1,4 +1,4 @@
-import 'package:SkypeClone/resources/firebase_repository.dart';
+import 'package:SkypeClone/resources/auth_methods.dart';
 import 'package:SkypeClone/utils/universal_variables.dart';
 import 'package:SkypeClone/utils/utilities.dart';
 import 'package:SkypeClone/widgets/appbar.dart';
@@ -12,17 +12,16 @@ class ChatListScreen extends StatefulWidget {
   _ChatListScreenState createState() => _ChatListScreenState();
 }
 
-// global
-final FirebaseRepository _repository = FirebaseRepository();
-
 class _ChatListScreenState extends State<ChatListScreen> {
+  final AuthMethods _authMethods = AuthMethods();
+
   String currentUserId;
   String initials;
 
   @override
   void initState() {
     super.initState();
-    _repository.getCurrentUser().then((user) {
+    _authMethods.getCurrentUser().then((user) {
       setState(() {
         currentUserId = user.uid;
         initials = Utils.getInitials(user.displayName);

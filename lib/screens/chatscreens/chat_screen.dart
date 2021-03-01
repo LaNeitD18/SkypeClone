@@ -5,7 +5,9 @@ import 'package:SkypeClone/enum/view_state.dart';
 import 'package:SkypeClone/models/message.dart';
 import 'package:SkypeClone/models/user.dart';
 import 'package:SkypeClone/provider/image_upload_provider.dart';
-import 'package:SkypeClone/resources/firebase_repository.dart';
+import 'package:SkypeClone/resources/auth_methods.dart';
+import 'package:SkypeClone/resources/chat_methods.dart';
+import 'package:SkypeClone/resources/storage_methods.dart';
 import 'package:SkypeClone/screens/chatscreens/widgets/cached_image.dart';
 import 'package:SkypeClone/utils/call_utilities.dart';
 import 'package:SkypeClone/utils/permissions.dart';
@@ -15,7 +17,6 @@ import 'package:SkypeClone/widgets/appbar.dart';
 import 'package:SkypeClone/widgets/custom_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:emoji_picker/emoji_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -31,11 +32,13 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   TextEditingController textFieldController = TextEditingController();
-  FirebaseRepository _repository = FirebaseRepository();
+  FocusNode textFieldFocus = FocusNode();
+
+  final StorageMethods _storageMethods = StorageMethods();
+  final ChatMethods _chatMethods = ChatMethods();
+  final AuthMethods _authMethods = AuthMethods();
 
   ScrollController _listScrollController = ScrollController();
-
-  FocusNode textFieldFocus = FocusNode();
 
   ImageUploadProvider _imageUploadProvider;
 
@@ -49,7 +52,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
 
-    _repository.getCurrentUser().then((user) {
+    _authMethods.getCurrentUser().then((user) {
       _currentUserId = user.uid;
 
       setState(() {
@@ -403,7 +406,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   pickImage({@required ImageSource source}) async {
     File selectedImage = await Utils.pickImage(source: source);
-    _repository.uploadImage(
+    _storageMethods.uploadImage(
       image: selectedImage,
       receiverId: widget.receiver.uid,
       senderId: _currentUserId,
@@ -428,7 +431,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     textFieldController.text = "";
 
-    _repository.addMessageToDb(message, sender, widget.receiver);
+    _chatMethods.addMessageToDb(message, sender, widget.receiver);
   }
 
   CustomAppBar customAppBar(context) {

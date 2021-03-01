@@ -1,11 +1,10 @@
 import 'package:SkypeClone/provider/image_upload_provider.dart';
 import 'package:SkypeClone/provider/user_provider.dart';
-import 'package:SkypeClone/resources/firebase_repository.dart';
+import 'package:SkypeClone/resources/auth_methods.dart';
 import 'package:SkypeClone/screens/home_screen.dart';
 import 'package:SkypeClone/screens/login_screen.dart';
 import 'package:SkypeClone/screens/search_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +23,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  FirebaseRepository _repository = FirebaseRepository();
+  final AuthMethods _authMethods = AuthMethods();
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +51,7 @@ class _MyAppState extends State<MyApp> {
           brightness: Brightness.dark,
         ),
         home: FutureBuilder(
-          future: _repository.getCurrentUser(),
+          future: _authMethods.getCurrentUser(),
           builder: (context, AsyncSnapshot<User> snapshot) {
             if (snapshot.hasData) {
               print("home");

@@ -1,4 +1,4 @@
-import 'package:SkypeClone/resources/firebase_repository.dart';
+import 'package:SkypeClone/resources/auth_methods.dart';
 import 'package:SkypeClone/screens/home_screen.dart';
 import 'package:SkypeClone/utils/universal_variables.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +13,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  FirebaseRepository _repository = FirebaseRepository();
+  final AuthMethods _authMethods = AuthMethods();
 
   bool isLoginPressed = false;
 
@@ -54,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
       isLoginPressed = true;
     });
 
-    _repository.signIn().then((User user) {
+    _authMethods.signIn().then((User user) {
       if (user != null) {
         authenticateUser(user);
       } else {
@@ -64,13 +64,13 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void authenticateUser(User user) {
-    _repository.authenticateUser(user).then((isNewUser) {
+    _authMethods.authenticateUser(user).then((isNewUser) {
       setState(() {
         isLoginPressed = false;
       });
 
       if (isNewUser) {
-        _repository.addDataToDb(user).then((value) {
+        _authMethods.addDataToDb(user).then((value) {
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) {
             return HomeScreen();

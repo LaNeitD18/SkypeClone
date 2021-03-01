@@ -3,7 +3,6 @@ import 'package:SkypeClone/screens/callscreens/pickup/pickup_layout.dart';
 import 'package:SkypeClone/screens/pageviews/chat_list_screen.dart';
 import 'package:SkypeClone/utils/universal_variables.dart';
 import 'package:flutter/material.dart';
-import 'package:SkypeClone/resources/firebase_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
