@@ -30,6 +30,16 @@ class AuthMethods {
     return UserModel.fromMap(documentSnapshot.data());
   }
 
+  Future<UserModel> getUserDetailsById(id) async {
+    try {
+      DocumentSnapshot documentSnapshot = await _userCollection.doc(id).get();
+
+      return UserModel.fromMap(documentSnapshot.data());
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<User> signIn() async {
     GoogleSignInAccount _signInAccount = await _googleSignIn.signIn();
     GoogleSignInAuthentication _signInAuthentication =
