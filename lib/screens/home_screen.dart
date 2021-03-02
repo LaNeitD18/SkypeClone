@@ -31,9 +31,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     // it's state is called even before the first frame is drawn
     // which means that no context is available at first
     // that's why the framework will throw an error
-    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
       userProvider = Provider.of<UserProvider>(context, listen: false);
-      userProvider.refreshUser();
+      await userProvider.refreshUser();
 
       _authMethods.setUserState(
           userId: userProvider.getUser.uid, userState: UserState.Online);
