@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:SkypeClone/enum/user_state.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:SkypeClone/constants/strings.dart';
 import 'package:SkypeClone/models/user.dart';
@@ -103,4 +105,15 @@ class AuthMethods {
     await _googleSignIn.signOut();
     return await _auth.signOut();
   }
+
+  void setUserState({@required String userId, @required UserState userState}) {
+    int stateNum = Utils.stateToNum(userState);
+
+    _userCollection.doc(userId).update({
+      "state": stateNum,
+    });
+  }
+
+  Stream<DocumentSnapshot> getUserStream({@required String uid}) =>
+      _userCollection.doc(uid).snapshots();
 }

@@ -6,6 +6,7 @@ import 'package:SkypeClone/resources/chat_methods.dart';
 import 'package:SkypeClone/screens/chatscreens/chat_screen.dart';
 import 'package:SkypeClone/screens/chatscreens/widgets/cached_image.dart';
 import 'package:SkypeClone/screens/pageviews/widgets/last_message_container.dart';
+import 'package:SkypeClone/screens/pageviews/widgets/online_dot_indicator.dart';
 import 'package:SkypeClone/utils/universal_variables.dart';
 import 'package:SkypeClone/widgets/custom_tile.dart';
 import 'package:flutter/material.dart';
@@ -75,20 +76,9 @@ class ViewLayout extends StatelessWidget {
               radius: 80,
               isRound: true,
             ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Container(
-                height: 13,
-                width: 13,
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: UniversalVariables.onlineDotColor,
-                    border: Border.all(
-                      color: UniversalVariables.blackColor,
-                      width: 2,
-                    )),
-              ),
-            )
+            OnlineDotIndicator(
+              uid: contact.uid,
+            ),
           ],
         ),
       ),
