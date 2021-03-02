@@ -2,6 +2,7 @@ import 'package:SkypeClone/models/contact.dart';
 import 'package:SkypeClone/provider/user_provider.dart';
 import 'package:SkypeClone/resources/auth_methods.dart';
 import 'package:SkypeClone/resources/chat_methods.dart';
+import 'package:SkypeClone/screens/callscreens/pickup/pickup_layout.dart';
 import 'package:SkypeClone/screens/pageviews/widgets/contact_view.dart';
 import 'package:SkypeClone/screens/pageviews/widgets/new_chat_button.dart';
 import 'package:SkypeClone/screens/pageviews/widgets/quite_box.dart';
@@ -47,11 +48,13 @@ class ChatListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: UniversalVariables.blackColor,
-        appBar: customAppBar(context),
-        floatingActionButton: NewChatButton(),
-        body: ChatListContainer());
+    return PickupLayout(
+      scaffold: Scaffold(
+          backgroundColor: UniversalVariables.blackColor,
+          appBar: customAppBar(context),
+          floatingActionButton: NewChatButton(),
+          body: ChatListContainer()),
+    );
   }
 }
 
@@ -61,18 +64,21 @@ class ChatListContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    UserProvider userProvider = Provider.of(context);
+    final UserProvider userProvider = Provider.of(context);
 
     return Container(
       child: StreamBuilder<QuerySnapshot>(
           stream: chatMethods.fetchContacts(userId: userProvider.getUser.uid),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
+              print("hasData");
               // represents the contact list of the currently logged in user
               var docList = snapshot.data.docs;
               if (docList.isEmpty) {
+                print("empty");
                 return QuiteBox();
               }
+              print("not empty");
               return ListView.builder(
                 padding: EdgeInsets.all(10),
                 itemCount: docList.length,
@@ -84,8 +90,11 @@ class ChatListContainer extends StatelessWidget {
                 },
               );
             }
+            print("no data");
             return Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.white,
+              ),
             );
           }),
     );

@@ -5,6 +5,7 @@ import 'package:SkypeClone/resources/auth_methods.dart';
 import 'package:SkypeClone/resources/chat_methods.dart';
 import 'package:SkypeClone/screens/chatscreens/chat_screen.dart';
 import 'package:SkypeClone/screens/chatscreens/widgets/cached_image.dart';
+import 'package:SkypeClone/screens/pageviews/widgets/last_message_container.dart';
 import 'package:SkypeClone/utils/universal_variables.dart';
 import 'package:SkypeClone/widgets/custom_tile.dart';
 import 'package:flutter/material.dart';
@@ -62,10 +63,9 @@ class ViewLayout extends StatelessWidget {
           fontSize: 19,
         ),
       ),
-      subtitle: Text(
-        "Hello",
-        style: TextStyle(color: UniversalVariables.greyColor, fontSize: 14),
-      ),
+      subtitle: LastMessageContainer(
+          stream: _chatMethods.fetchLastMessageBetween(
+              senderId: userProvider.getUser.uid, receiverId: contact.uid)),
       leading: Container(
         constraints: BoxConstraints(maxHeight: 60, maxWidth: 60),
         child: Stack(
