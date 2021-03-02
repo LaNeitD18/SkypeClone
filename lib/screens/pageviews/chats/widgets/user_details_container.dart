@@ -1,6 +1,6 @@
 import 'package:SkypeClone/resources/auth_methods.dart';
 import 'package:SkypeClone/screens/login_screen.dart';
-import 'package:SkypeClone/screens/pageviews/widgets/shimmering_logo.dart';
+import 'package:SkypeClone/screens/pageviews/chats/widgets/shimmering_logo.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:SkypeClone/models/user.dart';

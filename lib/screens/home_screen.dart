@@ -2,7 +2,8 @@ import 'package:SkypeClone/enum/user_state.dart';
 import 'package:SkypeClone/provider/user_provider.dart';
 import 'package:SkypeClone/resources/auth_methods.dart';
 import 'package:SkypeClone/screens/callscreens/pickup/pickup_layout.dart';
-import 'package:SkypeClone/screens/pageviews/chat_list_screen.dart';
+import 'package:SkypeClone/screens/pageviews/chats/chat_list_screen.dart';
+import 'package:SkypeClone/screens/pageviews/logs/log_screen.dart';
 import 'package:SkypeClone/utils/universal_variables.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -102,10 +103,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         backgroundColor: UniversalVariables.blackColor,
         body: PageView(
           children: <Widget>[
-            Container(
-              child: ChatListScreen(),
-            ),
-            Center(child: Text("Call Logs")),
+            ChatListScreen(),
+            LogScreen(),
             Center(child: Text("Contact Screen")),
           ],
           controller: pageController,

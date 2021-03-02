@@ -1,6 +1,6 @@
 // User Circle
 import 'package:SkypeClone/provider/user_provider.dart';
-import 'package:SkypeClone/screens/pageviews/widgets/user_details_container.dart';
+import 'package:SkypeClone/screens/pageviews/chats/widgets/user_details_container.dart';
 import 'package:SkypeClone/utils/universal_variables.dart';
 import 'package:SkypeClone/utils/utilities.dart';
 import 'package:flutter/material.dart';
