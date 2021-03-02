@@ -1,6 +1,7 @@
 import 'package:SkypeClone/enum/user_state.dart';
 import 'package:SkypeClone/provider/user_provider.dart';
 import 'package:SkypeClone/resources/auth_methods.dart';
+import 'package:SkypeClone/resources/local_db/repository/log_repository.dart';
 import 'package:SkypeClone/screens/callscreens/pickup/pickup_layout.dart';
 import 'package:SkypeClone/screens/pageviews/chats/chat_list_screen.dart';
 import 'package:SkypeClone/screens/pageviews/logs/log_screen.dart';
@@ -37,7 +38,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       await userProvider.refreshUser();
 
       _authMethods.setUserState(
-          userId: userProvider.getUser.uid, userState: UserState.Online);
+        userId: userProvider.getUser.uid,
+        userState: UserState.Online,
+      );
+
+      LogRepository.init(isHive: false);
     });
 
     WidgetsBinding.instance.addObserver(this);
@@ -47,7 +52,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     WidgetsBinding.instance.removeObserver(this);
   }
